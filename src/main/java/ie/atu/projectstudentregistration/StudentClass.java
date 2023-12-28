@@ -15,7 +15,7 @@ public class StudentClass {
     private String firstname;
     @JsonProperty("surname")
     private String surname;
-    @JsonProperty("DOB")
+    @JsonProperty("birthdate")
     private LocalDate birthdate;
     @JsonProperty("email")
     private String email;
