@@ -3,14 +3,24 @@ package ie.atu.projectstudentregistration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@RestController
 public class StudentController {
     private StudentService studentService;
+    private AcknowledgeService acknowledgeService;
+    private PaymentServiceClient paymentServiceClient;
 
     @Autowired
-    public void setStudentService(StudentService studentService, EmailService emailService){
+    public void setStudentService(StudentService studentService, EmailService emailService,
+                                  PaymentServiceClient paymentServiceClient, AcknowledgeService acknowledgeService){
+
         this.studentService = studentService;
+        this.paymentServiceClient = paymentServiceClient;
+        this.acknowledgeService = acknowledgeService;
+
     }
 
     @GetMapping("/studentDetails")
@@ -24,8 +34,10 @@ public class StudentController {
         return "Student added";
     }
 
-    @GetMapping("/registerStudent/{firstname}/{email}")
-    public String confirmStudent(@PathVariable String firstname, @PathVariable String email){
-        return studentService.registerStudent(firstname, email);
+    @PostMapping("/confirm-student")
+    public String confirmStudent(@RequestBody StudentClass studentClass){
+        String confirm = paymentServiceClient.studentDetails(studentClass);
+        return confirm + " " + acknowledgeService.ackMessage(studentClass);
+
     }
 }
