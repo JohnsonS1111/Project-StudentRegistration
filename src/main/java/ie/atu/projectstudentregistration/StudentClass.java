@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -13,12 +12,14 @@ import java.time.LocalDate;
 public class StudentClass {
     @JsonProperty("firstname")
     private String firstname;
+
     @JsonProperty("surname")
     private String surname;
+
     @JsonProperty("birthdate")
-    private LocalDate birthdate;
+    private int age;
+
     @JsonProperty("email")
     private String email;
-    @JsonProperty("gender")
-    private String gender;
+
 }
