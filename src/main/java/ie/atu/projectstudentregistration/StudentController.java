@@ -1,23 +1,22 @@
 package ie.atu.projectstudentregistration;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class StudentController {
     private StudentService studentService;
     private AcknowledgeService acknowledgeService;
-    private PaymentServiceClient paymentServiceClient;
+    private CourseServiceClient courseServiceClient;
 
     @Autowired
     public void setStudentService(StudentService studentService, EmailService emailService,
-                                  PaymentServiceClient paymentServiceClient, AcknowledgeService acknowledgeService){
+                                  CourseServiceClient courseServiceClient, AcknowledgeService acknowledgeService){
 
         this.studentService = studentService;
-        this.paymentServiceClient = paymentServiceClient;
+        this.courseServiceClient = courseServiceClient;
         this.acknowledgeService = acknowledgeService;
 
     }
@@ -28,14 +27,14 @@ public class StudentController {
     }
 
     @PostMapping("/createStudent")
-    public String createStudent(@RequestBody StudentClass sc){
+    public String createStudent(@Valid @RequestBody StudentClass sc){
         studentService.createStudent(sc);
         return "Student added";
     }
 
     @PostMapping("/confirm-student")
     public String confirmStudent(@RequestBody StudentClass studentClass){
-        String confirm = paymentServiceClient.studentDetails(studentClass);
+        String confirm = courseServiceClient.studentDetails(studentClass);
         return confirm + " " + acknowledgeService.ackMessage(studentClass);
 
     }
