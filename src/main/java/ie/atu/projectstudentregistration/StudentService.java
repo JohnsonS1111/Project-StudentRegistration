@@ -10,22 +10,27 @@ import java.util.List;
 public class StudentService {
 
     private final EmailService emailService;
-    private final List<StudentClass> students = new ArrayList<>();
+    private final StudentClassRepo studentClassRepo;
 
     public void createStudent(StudentClass sc){
-        students.add(sc);
+        studentClassRepo.save(sc);
     }
 
-    public List<StudentClass> getStudentDetails(){
-        return students;
+    public StudentClass getStudentDetails(String email){
+        return studentClassRepo.findByEmail(email);
     }
     @Autowired
-    public StudentService(EmailService emailService){
+    public StudentService(EmailService emailService, StudentClassRepo studentClassRepo){
         this.emailService = emailService;
+        this.studentClassRepo = studentClassRepo;
     }
 
     public String registerStudent(String firstname, String email){
         emailService.sendEmail(email, "You have now registered with Atlantic Technical University with the email. Welcome to ATU " +firstname);
         return "Name: " + firstname + " Email: " + email;
+    }
+
+    public List<StudentClass> getAllStudents() {
+        return studentClassRepo.findAll();
     }
 }

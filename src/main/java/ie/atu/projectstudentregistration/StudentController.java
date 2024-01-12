@@ -2,8 +2,10 @@ package ie.atu.projectstudentregistration;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -22,22 +24,34 @@ public class StudentController {
 
     }
 
-    @GetMapping("/studentDetails")
-    public @ResponseBody List<StudentClass> getStudent(){
-        return studentService.getStudentDetails();
+    @GetMapping("/studentDetails/{email}")
+    public ResponseEntity<?> getStudent(@PathVariable String email){
+        if(email.isBlank()){
+            return ResponseEntity.badRequest().body("Email is invalid");
+        }
+
+        StudentClass student = studentService.getStudentDetails(email);
+        if(student == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(student);
     }
 
+    @GetMapping("/allStudents")
+    public ResponseEntity<?> getAllStudent(){
+
+        List<StudentClass> student = studentService.getAllStudents();
+        if(student == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(student);
+    }
     @PostMapping("/createStudent")
     public String createStudent(@Valid @RequestBody StudentClass sc, BindingResult bindingResult){
 
         studentService.createStudent(sc);
         return "Student added";
-    }
-
-    @PostMapping("/confirm-student")
-    public String confirmStudent(@RequestBody StudentClass studentClass){
-        String confirm = courseServiceClient.studentDetails(studentClass);
-        return confirm + " " + acknowledgeService.ackMessage(studentClass);
-
     }
 }
