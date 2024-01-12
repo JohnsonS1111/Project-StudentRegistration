@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  student-service:
+    image: johnsons1/student-service:latest
+    ports:
+      - "8081:8081"
+    networks:
+      - project_network
+
+
+  course-service:
+    image: johnsons1/course-service:latest
+    ports:
+      - "8083:8083"
+    networks:
+      - project_network
+
+
+networks:
+  project_network:
+    driver: bridge
