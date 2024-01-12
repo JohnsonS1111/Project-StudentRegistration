@@ -16,6 +16,13 @@ services:
     networks:
       - project_network
 
+  elective-service:
+    image: johnsons1/elective-service:latest
+    ports:
+      - "8084:8084"
+    networks:
+      - project_network
+
 
 networks:
   project_network:
